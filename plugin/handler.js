@@ -32,7 +32,7 @@ class SolidityCompiler extends CachingCompiler {
 			return inputFile.error({
 				message: "Solidity errors: " + String(output.errors)
 			});
-		
+
 		var results = output,
 			jsContent = "";
 
@@ -40,10 +40,10 @@ class SolidityCompiler extends CachingCompiler {
 			if (contractName == name) {
 				jsContent += "var web3 = {};";
 
-				jsContent += "if(typeof window.web3 !== 'undefined')";
+				jsContent += "if(typeof window !== 'undefined' && typeof window.web3 !== 'undefined')";
 				jsContent += "web3 = window.web3;";
 
-				jsContent += "if(typeof window.web3 === 'undefined'";
+				jsContent += "if(typeof window === 'undefined' && typeof window.web3 === 'undefined'";
 				jsContent += "  && typeof Web3 !== 'undefined')";
 				jsContent += "    web3 = new Web3();";
 
@@ -58,7 +58,7 @@ class SolidityCompiler extends CachingCompiler {
 			sourceMap: ''
 		};
 	}
-	
+
 	addCompileResult(inputFile, compileResult) {
 		inputFile.addJavaScript({
 			path: inputFile.getPathInPackage() + '.js',

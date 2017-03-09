@@ -1,4 +1,4 @@
-var solc = Npm.require('solc');
+  var solc = Npm.require('solc');
 
 function has(object, key) {
   return object ? hasOwnProperty.call(object, key) : false;
@@ -25,34 +25,34 @@ class SolidityCompiler extends CachingCompiler {
 	compileOneFile(inputFile) {
 		var name = inputFile._resourceSlot.inputResource.path.split("/").pop();
 		name = name.split('.')[0];
-
 		var output = solc.compile(inputFile.getContentsAsString(), 1);
 
 		if (has(output, 'errors'))
 			return inputFile.error({
-				message: "Solidity errors: " + String(output.errors)
+				message: "Solidity errors in Contract: " + String(output.errors)
 			});
 
 		var results = output,
 			jsContent = "";
 
 		for (var contractName in results.contracts) {
-			if (contractName == name) {
+			if (contractName == ":"+ name) {
 				jsContent += "var web3 = {};";
 
 				jsContent += "if(typeof window !== 'undefined' && typeof window.web3 !== 'undefined')";
 				jsContent += "web3 = window.web3;";
 
-				jsContent += "if(typeof window === 'undefined' && typeof window.web3 === 'undefined'";
+				jsContent += "if(typeof window === 'undefined' || typeof window.web3 === 'undefined'";
 				jsContent += "  && typeof Web3 !== 'undefined')";
 				jsContent += "    web3 = new Web3();";
 
-				jsContent += "\n\n " + name + ' = ' + ' web3.eth.contract(' + JSON.parse(JSON.stringify(results.contracts[name].interface, null, '\t')).trim() + ')' + '; \n\n';
+				jsContent += "\n\n " + name + ' = ' + ' web3.eth.contract(' + JSON.parse(JSON.stringify(results.contracts[contractName].interface, null, '\t')).trim() + ')' + '; \n\n';
 
-				jsContent += "" + name + ".bytecode = '" + results.contracts[name].bytecode + "'; \n\n";
+				jsContent += "" + name + ".bytecode = '" + results.contracts[contractName].bytecode + "'; \n\n";
+        console.log ("bytecode of contract =" + results.contracts[contractName].bytecode);
+
 			}
 		}
-
 		return {
 			source: jsContent,
 			sourceMap: ''

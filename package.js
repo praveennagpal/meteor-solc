@@ -1,7 +1,7 @@
 Package.describe({
   name: 'pnagpal:solc',
   summary: 'The solc package provides a compiler build plugin for the Meteor build tool.',
-  version: '0.0.2',
+  version: '0.0.14',
   git: 'http://github.com/praveennagpal/meteor-solc'
 });
 
